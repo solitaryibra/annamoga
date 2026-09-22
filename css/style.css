@@ -166,3 +166,56 @@ main p {
 .hero-button:hover {
     opacity: 0.8;
 }
+
+.how-it-works {
+    padding: 120px 50px;
+    background: white;
+}
+
+.section-heading {
+    max-width: 700px;
+    margin: 0 auto 80px;
+    text-align: center;
+}
+
+.section-heading h2 {
+    font-size: 52px;
+    line-height: 1.1;
+    margin: 20px 0;
+}
+
+.section-heading > p:last-child {
+    font-size: 19px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.steps {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.step {
+    text-align: left;
+}
+
+.step-number {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.step h3 {
+    font-size: 22px;
+    margin: 20px 0 12px;
+}
+
+.step p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
