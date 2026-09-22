@@ -68,3 +68,47 @@ main h1 {
 main p {
     font-size: 24px;
 }
+
+.footer {
+    background: #222;
+    color: white;
+    padding: 60px 50px 20px;
+}
+
+.footer-brand h2 {
+    margin: 0 0 10px;
+}
+
+.footer-brand p {
+    margin: 0;
+    color: #ccc;
+}
+
+.footer-links {
+    display: flex;
+    gap: 100px;
+    margin-top: 40px;
+}
+
+.footer-links h3 {
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    display: block;
+    margin-bottom: 10px;
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    color: #999;
+    font-size: 14px;
+}
