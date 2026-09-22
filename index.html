@@ -7,125 +7,40 @@
 
     <title>ANNA MOGA</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f3ef;
-            color: #222;
-            text-align: center;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 64px;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 24px;
-            margin-bottom: 35px;
-        }
-
-        button {
-            padding: 16px 32px;
-            font-size: 18px;
-            border: none;
-            border-radius: 30px;
-            background: #222;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            opacity: 0.8;
-        }
-
-        .how-it-works {
-            padding: 100px 20px;
-            background: white;
-        }
-
-        .how-it-works h2 {
-            font-size: 40px;
-            margin-bottom: 50px;
-        }
-
-        .steps {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        .step {
-            max-width: 250px;
-        }
-
-        .step-number {
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .step h3 {
-            font-size: 22px;
-        }
-
-        .step p {
-            font-size: 16px;
-            line-height: 1.5;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <section class="hero">
+    <header class="navbar">
+
+        <a href="index.html" class="logo">ANNA MOGA</a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="faq.html">FAQ</a>
+        </nav>
+
+        <a href="create.html" class="create-button">
+            Create My Figurine
+        </a>
+
+    </header>
+
+
+    <main>
 
         <h1>ANNA MOGA</h1>
 
         <p>Turn yourself into 3D.</p>
 
-        <button>Create My Figurine</button>
-
-    </section>
+    </main>
 
 
-    <section class="how-it-works">
-
-        <h2>How it works</h2>
-
-        <div class="steps">
-
-            <div class="step">
-                <div class="step-number">01</div>
-                <h3>Upload your photos</h3>
-                <p>Send us photos of yourself, your friends, family, or anyone you want to turn into a figurine.</p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">02</div>
-                <h3>We create your 3D model</h3>
-                <p>Our technology transforms your photos into a personalized 3D model.</p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">03</div>
-                <h3>We print it</h3>
-                <p>Your digital model becomes a real physical figurine that you can keep or give as a gift.</p>
-            </div>
-
-        </div>
-
-    </section>
+    <script src="main.js"></script>
 
 </body>
 
