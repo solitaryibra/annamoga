@@ -357,3 +357,261 @@ nav a:hover {
     }
 
 }
+
+/* =========================
+   PRODUCTS PAGE
+   ========================= */
+
+.products-hero {
+    padding: 140px 30px 120px;
+    text-align: center;
+    background: #f5f3ef;
+}
+
+.products-hero h1 {
+    font-size: 80px;
+    line-height: 1.05;
+    margin: 20px 0 30px;
+}
+
+.products-hero > p:last-child {
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 20px;
+    line-height: 1.6;
+    color: #666;
+}
+
+
+/* =========================
+   PRODUCT FAMILY
+   ========================= */
+
+.product-family {
+    padding: 120px 50px;
+    background: white;
+}
+
+.product-family-intro {
+    max-width: 700px;
+    margin: 0 auto 70px;
+    text-align: center;
+}
+
+.product-family-intro h2 {
+    font-size: 58px;
+    line-height: 1.05;
+    margin: 20px 0 30px;
+}
+
+.product-family-intro p:not(.eyebrow) {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #666;
+    margin: 10px auto;
+    max-width: 650px;
+}
+
+
+/* =========================
+   MODEL GRID
+   ========================= */
+
+.model-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    gap: 30px;
+}
+
+.small-models {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.large-models {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+
+.model-card {
+    background: #f5f3ef;
+    overflow: hidden;
+}
+
+.model-placeholder {
+    height: 360px;
+    background: #e8e5df;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.model-placeholder span {
+    font-size: 50px;
+}
+
+.model-info {
+    padding: 25px;
+}
+
+.model-info h3 {
+    font-size: 24px;
+    margin: 0 0 8px;
+}
+
+.model-info p {
+    margin: 0 0 18px;
+    color: #777;
+    line-height: 1.5;
+}
+
+.model-info a {
+    color: #222;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.model-info a:hover {
+    opacity: 0.6;
+}
+
+
+/* =========================
+   CUSTOM MODEL
+   ========================= */
+
+.custom-model {
+    background: #222;
+    color: white;
+}
+
+.custom-placeholder {
+    background: #333;
+    color: white;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.custom-placeholder span {
+    font-size: 60px;
+    font-weight: normal;
+}
+
+.custom-placeholder strong {
+    font-size: 14px;
+    letter-spacing: 3px;
+}
+
+.custom-model .model-info p {
+    color: #bbb;
+}
+
+.custom-model .model-info a {
+    color: white;
+}
+
+
+/* =========================
+   LARGE PRODUCT SECTION
+   ========================= */
+
+.large-product-family {
+    background: #f5f3ef;
+}
+
+.large-product-family .model-card {
+    background: white;
+}
+
+.large-product-family .model-placeholder {
+    background: #e8e5df;
+}
+
+
+/* =========================
+   PRODUCTS CTA
+   ========================= */
+
+.products-cta {
+    padding: 140px 30px;
+    text-align: center;
+    background: white;
+}
+
+.products-cta h2 {
+    font-size: 65px;
+    line-height: 1.05;
+    margin: 20px 0 30px;
+}
+
+.products-cta > p:not(.eyebrow) {
+    max-width: 550px;
+    margin: 0 auto 40px;
+    color: #666;
+    font-size: 19px;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   PRODUCTS PAGE MOBILE
+   ========================= */
+
+@media (max-width: 900px) {
+
+    .products-hero h1 {
+        font-size: 60px;
+    }
+
+    .product-family-intro h2 {
+        font-size: 48px;
+    }
+
+    .small-models {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .large-models {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .products-hero {
+        padding: 90px 20px;
+    }
+
+    .products-hero h1 {
+        font-size: 48px;
+    }
+
+    .product-family {
+        padding: 80px 20px;
+    }
+
+    .product-family-intro h2 {
+        font-size: 40px;
+    }
+
+    .small-models {
+        grid-template-columns: 1fr;
+    }
+
+    .model-placeholder {
+        height: 300px;
+    }
+
+    .products-cta {
+        padding: 90px 20px;
+    }
+
+    .products-cta h2 {
+        font-size: 48px;
+    }
+
+}
