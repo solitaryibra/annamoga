@@ -9,14 +9,17 @@ body {
     color: #222;
 }
 
+
+/* =========================
+   NAVIGATION
+   ========================= */
+
 .navbar {
     height: 80px;
     padding: 0 50px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     background: white;
 }
 
@@ -38,36 +41,205 @@ nav a {
     font-size: 16px;
 }
 
+nav a:hover {
+    opacity: 0.6;
+}
+
 .create-button {
     padding: 12px 22px;
     border-radius: 25px;
-
     background: #222;
     color: white;
-
     text-decoration: none;
     font-size: 15px;
 }
 
-main {
-    min-height: calc(100vh - 80px);
+.create-button:hover {
+    opacity: 0.8;
+}
 
+
+/* =========================
+   HERO
+   ========================= */
+
+.hero {
+    min-height: calc(100vh - 80px);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    padding: 80px 20px;
+}
 
+.hero-content {
+    max-width: 800px;
+}
+
+.eyebrow {
+    font-size: 14px;
+    letter-spacing: 3px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: 80px;
+    line-height: 1.05;
+    margin: 0 0 30px;
+}
+
+.hero-description {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    font-size: 20px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.hero-button {
+    display: inline-block;
+    padding: 16px 32px;
+    border-radius: 30px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.hero-button:hover {
+    opacity: 0.8;
+}
+
+
+/* =========================
+   SECTION HEADINGS
+   ========================= */
+
+.section-heading {
+    max-width: 700px;
+    margin: 0 auto 80px;
     text-align: center;
 }
 
-main h1 {
-    font-size: 64px;
-    margin: 0 0 15px;
+.section-heading h2 {
+    font-size: 52px;
+    line-height: 1.1;
+    margin: 20px 0;
 }
 
-main p {
-    font-size: 24px;
+.section-heading > p:last-child {
+    font-size: 19px;
+    line-height: 1.6;
+    color: #666;
 }
+
+
+/* =========================
+   HOW IT WORKS
+   ========================= */
+
+.how-it-works {
+    padding: 120px 50px;
+    background: white;
+}
+
+.steps {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.step {
+    text-align: left;
+}
+
+.step-number {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.step h3 {
+    font-size: 22px;
+    margin: 20px 0 12px;
+}
+
+.step p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+
+/* =========================
+   PRODUCTS PREVIEW
+   ========================= */
+
+.products-preview {
+    padding: 120px 50px;
+    background: #f5f3ef;
+}
+
+.product-cards {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+
+.product-card {
+    background: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.product-placeholder {
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8e5df;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.product-card h3 {
+    font-size: 28px;
+    margin: 25px 0 10px;
+}
+
+.product-card p {
+    color: #666;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.product-card a {
+    display: inline-block;
+    margin-top: 20px;
+    color: #222;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.product-card a:hover {
+    opacity: 0.6;
+}
+
+.products-button {
+    text-align: center;
+    margin-top: 50px;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
 
 .footer {
     background: #222;
@@ -113,166 +285,75 @@ main p {
     font-size: 14px;
 }
 
-.hero {
-    min-height: calc(100vh - 80px);
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* =========================
+   MOBILE
+   ========================= */
 
-    text-align: center;
-    padding: 80px 20px;
+@media (max-width: 800px) {
+
+    .navbar {
+        height: auto;
+        padding: 20px;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    nav {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero h1 {
+        font-size: 55px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .product-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-links {
+        gap: 50px;
+    }
+
 }
 
-.hero-content {
-    max-width: 800px;
-}
 
-.eyebrow {
-    font-size: 14px;
-    letter-spacing: 3px;
-    font-weight: bold;
-    margin-bottom: 25px;
-}
+@media (max-width: 500px) {
 
-.hero h1 {
-    font-size: 80px;
-    line-height: 1.05;
-    margin: 0 0 30px;
-}
+    .hero {
+        padding: 60px 20px;
+    }
 
-.hero-description {
-    max-width: 600px;
-    margin: 0 auto 40px;
+    .hero h1 {
+        font-size: 45px;
+    }
 
-    font-size: 20px;
-    line-height: 1.6;
-    color: #555;
-}
+    .section-heading h2 {
+        font-size: 40px;
+    }
 
-.hero-button {
-    display: inline-block;
+    .how-it-works,
+    .products-preview {
+        padding: 80px 20px;
+    }
 
-    padding: 16px 32px;
-    border-radius: 30px;
+    .steps {
+        grid-template-columns: 1fr;
+    }
 
-    background: #222;
-    color: white;
+    .footer {
+        padding: 50px 25px 20px;
+    }
 
-    text-decoration: none;
-    font-size: 17px;
-}
+    .footer-links {
+        flex-direction: column;
+        gap: 30px;
+    }
 
-.hero-button:hover {
-    opacity: 0.8;
-}
-
-.how-it-works {
-    padding: 120px 50px;
-    background: white;
-}
-
-.section-heading {
-    max-width: 700px;
-    margin: 0 auto 80px;
-    text-align: center;
-}
-
-.section-heading h2 {
-    font-size: 52px;
-    line-height: 1.1;
-    margin: 20px 0;
-}
-
-.section-heading > p:last-child {
-    font-size: 19px;
-    line-height: 1.6;
-    color: #666;
-}
-
-.steps {
-    max-width: 1200px;
-    margin: 0 auto;
-
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-}
-
-.step {
-    text-align: left;
-}
-
-.step-number {
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.step h3 {
-    font-size: 22px;
-    margin: 20px 0 12px;
-}
-
-.step p {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #666;
-}
-
-.products-preview {
-    padding: 120px 50px;
-    background: #f5f3ef;
-}
-
-.product-cards {
-    max-width: 1200px;
-    margin: 0 auto;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-
-.product-card {
-    background: white;
-    padding: 30px;
-    text-align: center;
-}
-
-.product-placeholder {
-    height: 300px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #e8e5df;
-
-    font-size: 40px;
-    font-weight: bold;
-}
-
-.product-card h3 {
-    font-size: 25px;
-    margin: 25px 0 10px;
-}
-
-.product-card p {
-    color: #666;
-    line-height: 1.6;
-}
-
-.product-card a {
-    display: inline-block;
-    margin-top: 15px;
-
-    color: #222;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.products-button {
-    text-align: center;
-    margin-top: 50px;
 }
