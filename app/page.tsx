@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const products = [
   ["01", "Small Assistant", "A compact personalized character designed to bring your digital companion into the physical world."],
@@ -28,7 +29,7 @@ export default function Home() {
         <div className="actions"><Link href="#products" className="btn primary">Create your character</Link><Link href="#process" className="btn secondary">See how it works</Link></div>
         <p className="note"><b/> Personalization starts with one photograph.</p>
       </div>
-      <div className="hero-art"><small>PHYSICAL / INTELLIGENT</small><div className="art-stage"><div className="orb"/><Character large/></div><small>AM—001&nbsp;&nbsp;&nbsp; POZNAŃ / POLAND</small></div>
+      <div className="hero-art"><small>PHYSICAL / INTELLIGENT</small><div className="art-stage"><div className="orb"/><Image className="hero-product-image" src="/small-assistant.png.png" alt="ANNA MOGA Small Assistant prototype" width={1024} height={1024} priority /></div><small>AM—001&nbsp;&nbsp;&nbsp; POZNAŃ / POLAND</small></div>
     </div></section>
 
     <section className="statement"><div className="container statement-grid"><p className="kicker">THE IDEA</p><div><h2>A character that is yours.</h2><div className="pills"><span>Personalized.</span><span>Physical.</span><span>Intelligent.</span></div></div></div></section>
@@ -36,7 +37,7 @@ export default function Home() {
     <section id="products" className="section"><div className="container">
       <div className="heading"><div><p className="kicker blue">PRODUCTS</p><h2>Made to look like you.<br/>Built to become more.</h2></div><p>Every character begins with a photograph and becomes something you can hold.</p></div>
       <div className="products">{products.map(([num,name,text],i)=><article className="product" key={name}>
-        <div className="product-art"><span>{num}</span><em>{i===0?"COMPACT COMPANION":"STATEMENT PIECE"}</em><Character large={i===1}/></div>
+        <div className="product-art"><span>{num}</span><em>{i===0?"COMPACT COMPANION":"STATEMENT PIECE"}</em>{i===0?<Image className="product-render" src="/small-assistant.png.png" alt="ANNA MOGA Small Assistant prototype" width={1024} height={1024}/>:<Character large/>}</div>
         <div className="product-info"><div><p className="kicker blue">{num}</p><h3>{name}</h3></div><p>{text}</p><Link href="#contact">Learn more ↗</Link></div>
       </article>)}</div>
     </div></section>
