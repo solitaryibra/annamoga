@@ -72,3 +72,7 @@ details[open] p{animation:faq-in .2s ease-out}
 
 @media(max-width:900px){.cart-grid,.checkout-grid{grid-template-columns:1fr}.cart-summary,.checkout-summary{position:static}.cart-summary,.checkout-summary{order:-1}}
 @media(max-width:600px){.cart-header,.checkout-header{padding:58px 0 28px}.cart-header h1,.checkout-header h1{font-size:56px}.cart-item{grid-template-columns:40px 1fr}.cart-item-side{grid-column:2;text-align:left;align-items:flex-start}.checkout-form{padding:22px}.form-grid{grid-template-columns:1fr}.form-grid label.full{grid-column:auto}.checkout-section h2{font-size:30px}}
+
+
+/* PayU */
+.checkout-save:disabled{opacity:.55;cursor:wait}.sandbox-note{margin:14px 0 0;color:var(--muted);font-size:11px;line-height:1.5}.payment-error{margin:14px 0 0;color:#9b2424;font-size:12px;font-weight:700;line-height:1.5}.payment-return{padding:110px 0 130px}.payment-return-inner{max-width:950px}.payment-return h1{margin:14px 0 0;font-size:clamp(58px,7vw,96px);line-height:.9;letter-spacing:-.075em}.payment-return h1 span{display:block;color:var(--blue);margin-top:.08em}.payment-return-inner>p:not(.kicker){max-width:670px;color:var(--muted);font-size:17px;line-height:1.7;margin:28px 0 0}
