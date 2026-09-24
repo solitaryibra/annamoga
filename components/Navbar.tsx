@@ -26,7 +26,7 @@ export default function Navbar() {
           {links.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
         </nav>
 
-        <Link href="/products" className="nav-cta desktop-cta">Create yours</Link>
+        <Link href="/create" className="nav-cta desktop-cta">Create yours</Link>
 
         <button
           className={"menu-toggle" + (open ? " open" : "")}
@@ -43,7 +43,7 @@ export default function Navbar() {
         <nav>
           {links.map(([label, href]) => <Link key={href} href={href} onClick={close}>{label}</Link>)}
         </nav>
-        <Link href="/products" className="nav-cta mobile-cta" onClick={close}>Create yours</Link>
+        <Link href="/create" className="nav-cta mobile-cta" onClick={close}>Create yours</Link>
       </div>
     </header>
   );
