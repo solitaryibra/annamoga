@@ -80,17 +80,21 @@ async function getAccessToken(baseUrl: string, clientId: string, clientSecret: s
 }
 
 async function updateDatabaseOrder(extOrderId: string, patch: Record<string, unknown>) {
-  const response = await supabaseRequest(
-    "orders?payu_ext_order_id=eq." + encodeURIComponent(extOrderId),
-    {
-      method: "PATCH",
-      headers: { Prefer: "return=minimal" },
-      body: JSON.stringify({ ...patch, updated_at: new Date().toISOString() }),
-    }
-  );
+  try {
+    const response = await supabaseRequest(
+      "orders?payu_ext_order_id=eq." + encodeURIComponent(extOrderId),
+      {
+        method: "PATCH",
+        headers: { Prefer: "return=minimal" },
+        body: JSON.stringify({ ...patch, updated_at: new Date().toISOString() }),
+      }
+    );
 
-  if (!response.ok) {
-    console.error("Supabase order update failed", response.status, await response.text());
+    if (!response.ok) {
+      console.error("Supabase order update failed", response.status, await response.text());
+    }
+  } catch (error) {
+    console.error("Supabase order update threw", error);
   }
 }
 
@@ -298,8 +302,9 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Create PayU order failed", error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to create payment." },
+      { error: message || "Unable to create payment." },
       { status: 500 }
     );
   }
