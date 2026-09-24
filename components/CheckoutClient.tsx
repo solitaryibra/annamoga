@@ -47,10 +47,16 @@ export default function CheckoutClient() {
         body: JSON.stringify({ items, customer }),
       });
 
-      const result = await response.json();
+      const raw = await response.text();
+      let result: { redirectUri?: string; error?: string } = {};
+      try {
+        result = raw ? JSON.parse(raw) : {};
+      } catch {
+        result = {};
+      }
 
       if (!response.ok || !result.redirectUri) {
-        throw new Error(result.error || "Unable to start PayU payment.");
+        throw new Error(result.error || ("Payment request failed (" + response.status + ")."));
       }
 
       window.location.assign(result.redirectUri);
