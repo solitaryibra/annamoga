@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,21 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <header className="header">
-          <div className="header-inner">
-            <Link href="/" className="brand-logo brand-logo-wordmark" aria-label="Anna Moga home">
-              <img src="/images/master-logo-blue-wordmark.svg" alt="Anna Moga" />
-            </Link>
-            <nav>
-              <Link href="/products">Products</Link>
-              <Link href="/about">About</Link>
-              <Link href="/how-it-works">How it works</Link>
-              <Link href="/faq">FAQ</Link>
-              <Link href="/contact">Contact</Link>
-            </nav>
-            <Link href="/products" className="nav-cta">Create yours</Link>
-          </div>
-        </header>
+        <Navbar />
 
         {children}
 
