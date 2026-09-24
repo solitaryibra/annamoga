@@ -26,7 +26,6 @@ async function updateOrderFromPayU(extOrderId: string, patch: Record<string, unk
       method: "PATCH",
       headers: {
         apikey: config.secret,
-        Authorization: "Bearer " + config.secret,
         "Content-Type": "application/json",
         Prefer: "return=minimal",
       },
