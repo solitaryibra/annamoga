@@ -24,3 +24,6 @@ details[open] summary b{transform:rotate(45deg)}
 details[open] p{animation:faq-in .2s ease-out}
 @keyframes faq-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @media(max-width:600px){.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.specs span{width:100%;padding:10px 8px}.pills span{padding:8px 11px}.faq-list summary{font-size:15px}}
+
+.hero-product-image{position:relative;z-index:2;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 28px 28px #0002)}
+.product-render{width:92%;height:92%;object-fit:contain;position:relative;z-index:2;transition:transform .35s ease}.product:hover .product-render{transform:scale(1.025)}
