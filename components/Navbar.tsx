@@ -9,6 +9,7 @@ const links = [
   ["How it works", "/how-it-works"],
   ["FAQ", "/faq"],
   ["Contact", "/contact"],
+  ["Cart", "/cart"],
 ] as const;
 
 export default function Navbar() {
