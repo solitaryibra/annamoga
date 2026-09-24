@@ -168,7 +168,10 @@ export async function POST(request: NextRequest) {
     if (!orderInsert.ok) {
       const detail = await orderInsert.text();
       console.error("Supabase order insert failed", orderInsert.status, detail);
-      throw new Error("Could not save the order in the database.");
+      return NextResponse.json(
+        { error: "Supabase order insert failed (" + orderInsert.status + "): " + detail.slice(0, 500) },
+        { status: 500 }
+      );
     }
 
     const insertedOrders = await orderInsert.json();
@@ -197,7 +200,10 @@ export async function POST(request: NextRequest) {
     if (!itemsInsert.ok) {
       const detail = await itemsInsert.text();
       console.error("Supabase item insert failed", itemsInsert.status, detail);
-      throw new Error("Could not save the order items in the database.");
+      return NextResponse.json(
+        { error: "Supabase order_items insert failed (" + itemsInsert.status + "): " + detail.slice(0, 500) },
+        { status: 500 }
+      );
     }
 
     const config = payuConfig();
