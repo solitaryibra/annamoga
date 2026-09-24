@@ -48,10 +48,10 @@ export default function Home() {
     <section id="about" className="future"><div className="container future-grid"><div><p className="kicker">THE LONG-TERM VISION</p><h2>It starts as a character.<span>It can become a companion.</span></h2></div><div className="future-copy"><p>Today, ANNA MOGA creates personalized physical characters. Tomorrow, those characters can become intelligent interfaces for your home.</p><div className="specs"><span>VOICE</span><span>AI</span><span>WI-FI</span><span>SMART HOME</span></div></div></div></section>
 
     <section id="faq" className="section"><div className="container faq"><div><p className="kicker blue">FAQ</p><h2>Questions,<br/>answered.</h2></div><div className="faq-list">
-      <details open><summary>How does personalization work?<b>+</b></summary><p>You provide a photograph. The creation workflow uses it as the starting point for your personalized character.</p></details>
-      <details><summary>What products are available?<b>+</b></summary><p>The initial product family includes Small Assistant and Large Face.</p></details>
-      <details><summary>Will the figurine become an AI device?<b>+</b></summary><p>The long-term product vision includes Wi-Fi-connected hardware, audio, and intelligent assistant capabilities.</p></details>
-      <details><summary>When can I create mine?<b>+</b></summary><p>The creation and ordering experience is being developed as the ANNA MOGA platform evolves.</p></details>
+      <details><summary><span>How does personalization work?</span><b>+</b></summary><p>You provide a photograph. The creation workflow uses it as the starting point for your personalized character.</p></details>
+      <details><summary><span>What products are available?</span><b>+</b></summary><p>The initial product family includes Small Assistant and Large Face.</p></details>
+      <details><summary><span>Will the figurine become an AI device?</span><b>+</b></summary><p>The long-term product vision includes Wi-Fi-connected hardware, audio, and intelligent assistant capabilities.</p></details>
+      <details><summary><span>When can I create mine?</span><b>+</b></summary><p>The creation and ordering experience is being developed as the ANNA MOGA platform evolves.</p></details>
     </div></div></section>
 
     <section id="contact" className="contact"><div className="container contact-inner"><p className="kicker">ANNA MOGA</p><h2>Make something<span>that looks like you.</span></h2><p>Have an idea, question, or want to follow the project?</p><Link href="mailto:hello@annamoga.com" className="btn light">Contact ANNA MOGA</Link></div></section>
