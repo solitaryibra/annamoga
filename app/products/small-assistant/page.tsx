@@ -27,7 +27,7 @@ export default function SmallAssistantPage() {
             </p>
 
             <div className="product-page-actions">
-              <Link href="/contact" className="btn primary">Create yours</Link>
+              <Link href="/create" className="btn primary">Create yours</Link>
               <Link href="/how-it-works" className="btn secondary">How it works</Link>
             </div>
           </div>
