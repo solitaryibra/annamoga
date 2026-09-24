@@ -15,7 +15,8 @@ type CartItem = {
 
 export default function CheckoutClient() {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [saved, setSaved] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
 
   useEffect(() => {
     try {
@@ -30,12 +31,33 @@ export default function CheckoutClient() {
     [items]
   );
 
-  function submit(e: FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setPaymentError("");
+    setPaying(true);
+
     const data = new FormData(e.currentTarget);
-    const details = Object.fromEntries(data.entries());
-    localStorage.setItem("anna-moga-checkout", JSON.stringify(details));
-    setSaved(true);
+    const customer = Object.fromEntries(data.entries());
+    localStorage.setItem("anna-moga-checkout", JSON.stringify(customer));
+
+    try {
+      const response = await fetch("/api/payu/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items, customer }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.redirectUri) {
+        throw new Error(result.error || "Unable to start PayU payment.");
+      }
+
+      window.location.assign(result.redirectUri);
+    } catch (error) {
+      setPaymentError(error instanceof Error ? error.message : "Unable to start payment.");
+      setPaying(false);
+    }
   }
 
   if (!items.length) {
@@ -57,8 +79,8 @@ export default function CheckoutClient() {
       <section className="checkout-header">
         <div className="container">
           <p className="kicker blue">CHECKOUT</p>
-          <h1>Delivery &<br/><span>contact.</span></h1>
-          <p>Enter the information needed to prepare the order. Payment integration comes after this step.</p>
+          <h1>Delivery &<br/><span>payment.</span></h1>
+          <p>Enter your details, then continue to PayU to test the payment flow.</p>
         </div>
       </section>
 
@@ -102,17 +124,12 @@ export default function CheckoutClient() {
               <span>I confirm that the order information is correct and that I have permission to use any photographs supplied for personalized products.</span>
             </label>
 
-            <button className="btn primary checkout-save" type="submit">
-              {saved ? "Details saved" : "Save and continue"}
+            <button className="btn primary checkout-save" type="submit" disabled={paying}>
+              {paying ? "Opening PayU…" : "Continue to PayU"}
             </button>
 
-            {saved && (
-              <div className="payment-placeholder">
-                <p className="kicker blue">NEXT: PAYMENT</p>
-                <h3>Checkout details are ready.</h3>
-                <p>The next integration is PayU. No payment is being taken yet.</p>
-              </div>
-            )}
+            <p className="sandbox-note">Payment is configured for PayU sandbox until production credentials are added.</p>
+            {paymentError && <p className="payment-error">{paymentError}</p>}
           </form>
 
           <aside className="checkout-summary">
