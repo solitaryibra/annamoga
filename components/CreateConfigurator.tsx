@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 
 type ProductId = "small-assistant" | "large-face";
@@ -193,7 +194,12 @@ export default function CreateConfigurator() {
                 </div>
                 <p className="review-note">The custom 3D model is not generated on this page yet. For custom orders, the uploaded photograph is the input for the production workflow. Final pricing can be confirmed before payment if the configuration changes.</p>
                 <button className="btn primary cart-button" onClick={addToCart}>{added ? "Added to cart" : "Add to cart"}</button>
-                {added && <p className="cart-success">Saved to this browser. Cart and checkout are the next integration step.</p>}
+                {added && (
+                  <div className="cart-success-wrap">
+                    <p className="cart-success">Added to your cart.</p>
+                    <Link href="/cart" className="btn secondary">View cart</Link>
+                  </div>
+                )}
               </div>
             )}
 
