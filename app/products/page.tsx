@@ -10,6 +10,7 @@ const products = [
     description: "A compact personalized character designed to bring your digital companion into the physical world.",
     options: ["5 stock character designs", "Custom face from one photograph", "Future AI features available separately"],
     image: true,
+    href: "/products/small-assistant",
   },
   {
     num: "02",
@@ -19,6 +20,7 @@ const products = [
     description: "A larger face-focused figurine built as a more expressive statement piece.",
     options: ["3 stock face designs", "Custom face from one photograph", "Designed for display and future smart features"],
     image: false,
+    href: "/products/large-face",
   },
 ];
 
@@ -70,7 +72,7 @@ export default function ProductsPage() {
                   </ul>
 
                   <div className="product-actions">
-                    <Link href="/contact" className="btn primary">I’m interested</Link>
+                    <Link href={product.href} className="btn primary">View product</Link>
                     <Link href="/how-it-works" className="btn secondary">How personalization works</Link>
                   </div>
                 </div>
