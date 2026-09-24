@@ -16,7 +16,7 @@ function Character({ large=false }: { large?: boolean }) {
 export default function Home() {
   return <main>
     <header className="header"><div className="header-inner">
-      <Link href="/" className="brand-logo" aria-label="ANNA MOGA home"><img src="/images/master-logo-blue.svg" alt="" /></Link>
+      <Link href="/" className="brand-logo brand-logo-wordmark" aria-label="ANNA MOGA home"><img src="/images/master-logo-blue-wordmark.svg" alt="ANNA MOGA" /></Link>
       <nav><Link href="#products">Products</Link><Link href="#about">About</Link><Link href="#process">How it works</Link><Link href="#faq">FAQ</Link><Link href="#contact">Contact</Link></nav>
       <Link href="#products" className="nav-cta">Create yours</Link>
     </div></header>
@@ -56,6 +56,6 @@ export default function Home() {
     </div></div></section>
 
     <section id="contact" className="contact"><div className="container contact-inner"><p className="kicker">ANNA MOGA</p><h2>Make something<span>that looks like you.</span></h2><p>Have an idea, question, or want to follow the project?</p><Link href="mailto:hello@annamoga.com" className="btn light">Contact ANNA MOGA</Link></div></section>
-    <footer><div className="container footer"><Link href="/" className="footer-logo" aria-label="ANNA MOGA home"><img src="/images/master-logo-wordmark.svg" alt="ANNA MOGA" /></Link><span>Personalized 3D characters & intelligent companions.</span><span>© 2026</span></div></footer>
+    <footer><div className="container footer"><Link href="/" className="footer-logo" aria-label="ANNA MOGA home"><img src="/images/master-logo-blue-wordmark.svg" alt="ANNA MOGA" /></Link><span>Personalized 3D characters & intelligent companions.</span><span>© 2026</span></div></footer>
   </main>;
 }
