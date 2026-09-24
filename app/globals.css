@@ -12,3 +12,15 @@
 footer{background:#111;color:#ffffff8f}.footer{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:11px}.footer .brand{color:#fff;font-size:16px}
 @media(max-width:900px){.header nav{display:none}.hero-inner,.statement-grid,.heading,.future-grid,.faq{grid-template-columns:1fr}.hero-art{height:500px}.products{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}.steps>div:nth-child(2){border-right:0}.steps>div:nth-child(n+3){border-top:1px solid var(--line)}}
 @media(max-width:600px){.container,.header-inner,.hero-inner{width:calc(100% - 32px)}.header-inner{height:68px}.nav-cta{padding:10px 14px;font-size:11px}.hero-inner{padding:55px 0 70px}.hero h1{font-size:58px}.hero-art{height:420px}.section,.statement,.process,.future{padding:82px 0}.product-art{height:420px}.product-info{grid-template-columns:1fr}.product-info>a{grid-column:auto}.steps{grid-template-columns:1fr}.steps>div,.steps>div+div{border-right:0;border-top:1px solid var(--line);padding:24px 0;min-height:auto}.steps>div:first-child{border-top:0}.steps h3{margin-top:25px}.footer{flex-direction:column;align-items:flex-start;justify-content:center;padding:24px 0}}
+
+/* Readability and accordion polish */
+.hero h1 span,.process h2 span,.future h2 span,.contact h2 span{margin-top:.08em}
+.pills,.specs{column-gap:10px;row-gap:10px}
+.specs span{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+summary{gap:24px;align-items:center}
+summary span{line-height:1.35}
+summary b{flex:0 0 auto;transition:transform .2s ease}
+details[open] summary b{transform:rotate(45deg)}
+details[open] p{animation:faq-in .2s ease-out}
+@keyframes faq-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.specs span{width:100%;padding:10px 8px}.pills span{padding:8px 11px}.faq-list summary{font-size:15px}}
