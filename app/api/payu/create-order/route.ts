@@ -49,7 +49,6 @@ async function supabaseRequest(
     ...options,
     headers: {
       apikey: config.secret,
-      Authorization: "Bearer " + config.secret,
       "Content-Type": "application/json",
       ...(options.headers || {}),
     },
