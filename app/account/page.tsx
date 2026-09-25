@@ -16,7 +16,11 @@ export default async function AccountPage() {
     supabase.from("devices").select("id", { count: "exact", head: true }).eq("user_id", user.id),
   ]);
 
-  const name = [profile?.first_name, profile?.last_name].filter(Boolean).join(" ") || user.email || "Customer";
+  const name =
+    [profile?.first_name, profile?.last_name].filter(Boolean).join(" ") ||
+    [user.user_metadata?.first_name, user.user_metadata?.last_name].filter(Boolean).join(" ") ||
+    user.email ||
+    "Customer";
 
   return (
     <main className="account-page">
