@@ -95,4 +95,6 @@ details[open] p{animation:faq-in .2s ease-out}
 
 
 /* Custom photo permission validation */
-.permission-check.needs-confirmation{border-color:#c94a4a;background:#fff7f7}.permission-warning{margin:8px 0 0;color:#b42318;font-size:12px;font-weight:700}
+.permission-check.needs-confirmation{color:var(--ink)}.continue-group{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:14px;min-width:0}.permission-inline-note{display:flex;align-items:center;gap:9px;max-width:310px;padding:9px 12px;border:1px solid #00628833;background:#f3f9fb;color:var(--deep);font-size:11px;font-weight:700;line-height:1.35;letter-spacing:.01em}.permission-inline-icon{display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:900}.create-controls .continue-group .primary{margin-left:0}
+
+@media(max-width:700px){.create-controls{align-items:flex-end}.continue-group{flex-direction:column;align-items:flex-end}.permission-inline-note{max-width:260px;text-align:left}}
