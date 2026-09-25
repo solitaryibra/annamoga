@@ -92,3 +92,7 @@ details[open] p{animation:faq-in .2s ease-out}
 
 /* Login action hierarchy */
 .auth-login-links{margin-top:18px;display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center}.auth-login-links .auth-forgot{align-self:flex-start;color:var(--blue);font-size:12px;font-weight:800}.auth-login-links p{margin:0;font-size:12px;color:var(--muted)}.auth-login-links p a{color:var(--blue);font-weight:800}.auth-admin-access{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}.auth-admin-access span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}.auth-admin-access a{font-size:12px;color:var(--blue);font-weight:800;text-decoration:none}.auth-admin-access a:hover{text-decoration:underline}
+
+
+/* Custom photo permission validation */
+.permission-check.needs-confirmation{border-color:#c94a4a;background:#fff7f7}.permission-warning{margin:8px 0 0;color:#b42318;font-size:12px;font-weight:700}
