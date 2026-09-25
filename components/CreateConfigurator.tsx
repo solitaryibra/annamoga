@@ -176,9 +176,7 @@ export default function CreateConfigurator() {
                       <input type="checkbox" checked={permission} onChange={(e) => setPermission(e.target.checked)} />
                       <span>I confirm that I have permission to use this photograph for this order.</span>
                     </label>
-                    {photoName && !permission && (
-                      <p className="permission-warning">Please tick the permission box before continuing.</p>
-                    )}
+
                   </div>
                 </div>
               </div>
@@ -208,7 +206,17 @@ export default function CreateConfigurator() {
 
             <div className="create-controls">
               {step > 1 && <button className="btn secondary" onClick={() => { setStep(step - 1); setAdded(false); }}>Back</button>}
-              {step < 4 && <button className="btn primary" disabled={!canContinue} onClick={() => setStep(step + 1)}>Continue</button>}
+              {step < 4 && (
+                <div className="continue-group">
+                  {step === 3 && mode === "custom" && photoName && !permission && (
+                    <div className="permission-inline-note" role="status">
+                      <span className="permission-inline-icon">!</span>
+                      <span>Photo permission is required before you continue.</span>
+                    </div>
+                  )}
+                  <button className="btn primary" disabled={!canContinue} onClick={() => setStep(step + 1)}>Continue</button>
+                </div>
+              )}
             </div>
           </div>
 
