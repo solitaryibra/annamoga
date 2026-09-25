@@ -172,10 +172,13 @@ export default function CreateConfigurator() {
                       <li>Avoid strong filters</li>
                     </ul>
                     {photoName && <p className="file-name">Selected: {photoName}</p>}
-                    <label className="permission-check">
+                    <label className={"permission-check " + (photoName && !permission ? "needs-confirmation" : "")}>
                       <input type="checkbox" checked={permission} onChange={(e) => setPermission(e.target.checked)} />
                       <span>I confirm that I have permission to use this photograph for this order.</span>
                     </label>
+                    {photoName && !permission && (
+                      <p className="permission-warning">Please tick the permission box before continuing.</p>
+                    )}
                   </div>
                 </div>
               </div>
