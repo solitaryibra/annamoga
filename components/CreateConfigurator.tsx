@@ -208,10 +208,10 @@ export default function CreateConfigurator() {
               {step > 1 && <button className="btn secondary" onClick={() => { setStep(step - 1); setAdded(false); }}>Back</button>}
               {step < 4 && (
                 <div className="continue-group">
-                  {step === 3 && mode === "custom" && photoName && !permission && (
+                  {step === 3 && mode === "custom" && !permission && (
                     <div className="permission-inline-note" role="status">
                       <span className="permission-inline-icon">!</span>
-                      <span>Photo permission is required before you continue.</span>
+                      <span>{photoName ? "Confirm photo permission to continue." : "Upload a photo and confirm permission to continue."}</span>
                     </div>
                   )}
                   <button className="btn primary" disabled={!canContinue} onClick={() => setStep(step + 1)}>Continue</button>
