@@ -135,6 +135,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             <>
               <Link href="/forgot-password">Forgot password?</Link>
               <span>New here? <Link href="/signup">Create an account</Link></span>
+              <span>Staff? <Link href="/admin/login">Admin login</Link></span>
             </>
           )}
           {mode === "signup" && <span>Already have an account? <Link href="/login">Sign in</Link></span>}
