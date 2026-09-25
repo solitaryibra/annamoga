@@ -130,17 +130,24 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         {error && <p className="payment-error">{error}</p>}
         {message && <p className="auth-success">{message}</p>}
 
-        <div className="auth-links">
-          {mode === "login" && (
-            <>
-              <Link href="/forgot-password">Forgot password?</Link>
-              <span>New here? <Link href="/signup">Create an account</Link></span>
-              <span>Staff? <Link href="/admin/login">Admin login</Link></span>
-            </>
-          )}
-          {mode === "signup" && <span>Already have an account? <Link href="/login">Sign in</Link></span>}
-          {mode === "forgot" && <Link href="/login">Back to sign in</Link>}
-        </div>
+        {mode === "login" ? (
+          <>
+            <div className="auth-login-links">
+              <Link href="/forgot-password" className="auth-forgot">Forgot password?</Link>
+              <p>New here? <Link href="/signup">Create an account</Link></p>
+            </div>
+
+            <div className="auth-admin-access">
+              <span>Staff access</span>
+              <Link href="/admin/login">Admin login</Link>
+            </div>
+          </>
+        ) : (
+          <div className="auth-links">
+            {mode === "signup" && <span>Already have an account? <Link href="/login">Sign in</Link></span>}
+            {mode === "forgot" && <Link href="/login">Back to sign in</Link>}
+          </div>
+        )}
       </section>
     </main>
   );
