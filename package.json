@@ -15,7 +15,7 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@huggingface/transformers": "^3.8.1",
-    "parakeet.js": "^0.4.0"
+    "parakeet.js": "^1.4.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
