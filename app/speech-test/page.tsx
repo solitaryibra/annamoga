@@ -2,80 +2,94 @@
 
 import { useEffect, useRef, useState } from "react";
 
+type WorkerMessage =
+  | { type: "status"; message: string }
+  | { type: "progress"; value: number }
+  | { type: "result"; text: string }
+  | { type: "error"; message: string };
+
 export default function SpeechTestPage() {
-  const [status, setStatus] = useState<"idle" | "recording" | "ready" | "error">("idle");
-  const [message, setMessage] = useState("Record a short sample to test your phone microphone.");
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [recording, setRecording] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [status, setStatus] = useState("Record 5–20 seconds, then select Transcribe.");
+  const [progress, setProgress] = useState<number | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState("");
+  const [error, setError] = useState("");
+  const blobRef = useRef<Blob | null>(null);
+  const urlRef = useRef<string | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  const urlRef = useRef<string | null>(null);
+  const workerRef = useRef<Worker | null>(null);
 
   useEffect(() => {
     return () => {
       if (recorderRef.current?.state === "recording") recorderRef.current.stop();
       streamRef.current?.getTracks().forEach((track) => track.stop());
+      workerRef.current?.terminate();
       if (urlRef.current) URL.revokeObjectURL(urlRef.current);
     };
   }, []);
 
   useEffect(() => {
-    if (status !== "recording") return;
+    if (!recording) return;
     const id = window.setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => window.clearInterval(id);
-  }, [status]);
+  }, [recording]);
 
   async function startRecording() {
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-      setStatus("error");
-      setMessage("Your browser does not support microphone recording. Try an updated Safari or Chrome browser over HTTPS.");
+      setError("This browser does not support recording. Use recent Safari or Chrome over HTTPS.");
       return;
     }
+    setError("");
+    setTranscript("");
+    blobRef.current = null;
+    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
+    urlRef.current = null;
+    setAudioUrl(null);
+    setSeconds(0);
+    chunksRef.current = [];
     try {
-      if (urlRef.current) URL.revokeObjectURL(urlRef.current);
-      urlRef.current = null;
-      setAudioUrl(null);
-      setSeconds(0);
-      chunksRef.current = [];
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-      const preferredTypes = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"];
-      const mimeType = preferredTypes.find((type) => MediaRecorder.isTypeSupported(type));
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const preferred = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"];
+      const mime = preferred.find((type) => MediaRecorder.isTypeSupported(type));
+      const recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
       recorderRef.current = recorder;
       recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunksRef.current.push(event.data);
+        if (event.data.size) chunksRef.current.push(event.data);
       };
       recorder.onerror = () => {
         stream.getTracks().forEach((track) => track.stop());
-        setStatus("error");
-        setMessage("Recording failed. Please try again.");
+        setRecording(false);
+        setError("Recording failed. Please try again.");
       };
       recorder.onstop = () => {
         stream.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
+        setRecording(false);
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" });
-        if (blob.size === 0) {
-          setStatus("error");
-          setMessage("No audio was captured. Check microphone permissions.");
+        if (!blob.size) {
+          setError("No audio captured. Check your microphone permissions.");
           return;
         }
+        blobRef.current = blob;
         const url = URL.createObjectURL(blob);
         urlRef.current = url;
         setAudioUrl(url);
-        setStatus("ready");
-        setMessage("Recording complete. Play it back to check your microphone.");
+        setStatus("Recording saved locally. Tap Transcribe to run Whisper.");
       };
       recorder.start();
-      setStatus("recording");
-      setMessage("Recording locally on your device…");
-    } catch (error) {
+      setRecording(true);
+      setStatus("Recording…");
+    } catch (e) {
       streamRef.current?.getTracks().forEach((track) => track.stop());
-      setStatus("error");
-      setMessage(error instanceof DOMException && error.name === "NotAllowedError"
-        ? "Microphone permission was denied. Enable it in your browser settings and try again."
-        : "Could not access the microphone. Check browser permissions and HTTPS.");
+      setError(e instanceof DOMException && e.name === "NotAllowedError"
+        ? "Microphone permission denied. Allow access in your browser settings."
+        : "Unable to access microphone. Verify HTTPS and microphone permissions.");
     }
   }
 
@@ -83,38 +97,110 @@ export default function SpeechTestPage() {
     if (recorderRef.current?.state === "recording") recorderRef.current.stop();
   }
 
+  async function decodeTo16kHz(blob: Blob): Promise<Float32Array> {
+    const bytes = await blob.arrayBuffer();
+    const context = new AudioContext();
+    try {
+      const decoded = await context.decodeAudioData(bytes);
+      const frames = Math.ceil(decoded.duration * 16000);
+      const offline = new OfflineAudioContext(1, frames, 16000);
+      const source = offline.createBufferSource();
+      source.buffer = decoded;
+      source.connect(offline.destination);
+      source.start();
+      const result = await offline.startRendering();
+      return new Float32Array(result.getChannelData(0));
+    } finally {
+      await context.close();
+    }
+  }
+
+  async function transcribe() {
+    if (!blobRef.current || busy) return;
+    setError("");
+    setTranscript("");
+    setProgress(null);
+    setBusy(true);
+    setStatus("Preparing audio…");
+
+    try {
+      const audio = await decodeTo16kHz(blobRef.current);
+      if (audio.length > 16000 * 30) {
+        throw new Error("Please record 30 seconds or less for this first test.");
+      }
+      if (!workerRef.current) {
+        const worker = new Worker(new URL("./whisper.worker.ts", import.meta.url), { type: "module" });
+        worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
+          const data = event.data;
+          if (data.type === "status") setStatus(data.message);
+          if (data.type === "progress") setProgress(data.value);
+          if (data.type === "result") {
+            setTranscript(data.text || "(No words recognized.)");
+            setStatus("Transcription complete.");
+            setBusy(false);
+          }
+          if (data.type === "error") {
+            setError(data.message);
+            setStatus("Transcription failed.");
+            setBusy(false);
+          }
+        };
+        worker.onerror = (event) => {
+          setError(event.message || "Whisper worker failed to initialize.");
+          setBusy(false);
+          worker.terminate();
+          workerRef.current = null;
+        };
+        workerRef.current = worker;
+      }
+      workerRef.current.postMessage({ type: "transcribe", audio }, [audio.buffer]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to prepare audio.");
+      setBusy(false);
+    }
+  }
+
+  const buttonStyle = { border: 0, borderRadius: 10, padding: "13px 18px", color: "#fff", cursor: "pointer", fontWeight: 600 } as const;
+
   return (
-    <main style={{ maxWidth: 680, margin: "0 auto", padding: "64px 20px 96px", minHeight: "70vh" }}>
-      <p style={{ color: "#2563eb", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em" }}>ANNA MOGA / LAB</p>
-      <h1 style={{ fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 700, margin: "14px 0" }}>Speech recognition test</h1>
+    <main style={{ maxWidth: 700, margin: "0 auto", padding: "56px 20px 90px" }}>
+      <p style={{ color: "#2563eb", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em" }}>ANNA MOGA / SPEECH LAB</p>
+      <h1 style={{ fontSize: "clamp(2rem, 6vw, 3rem)", margin: "14px 0" }}>Whisper speech recognition</h1>
       <p style={{ color: "#64748b", lineHeight: 1.65 }}>
-        Step 1: Verify microphone access and audio playback on your phone.
-        Whisper transcription will be added next.
+        Speak in English, Polish, Ukrainian, or Arabic. The multilingual Whisper Tiny model processes your
+        recording inside your browser — no paid transcription API.
       </p>
-      <section style={{ marginTop: 32, padding: 24, border: "1px solid #cbd5e1", borderRadius: 18 }}>
-        <p aria-live="polite" style={{ marginBottom: 20 }}>{message}</p>
-        <p style={{ marginBottom: 20, fontVariantNumeric: "tabular-nums" }}>
-          {status === "recording" ? `● Recording: ${seconds}s` : "Microphone test"}
-        </p>
-        {status === "recording" ? (
-          <button type="button" onClick={stopRecording} style={{ background: "#b91c1c", color: "white", padding: "14px 22px", border: 0, borderRadius: 10, cursor: "pointer" }}>
-            Stop recording
+      <section style={{ border: "1px solid #cbd5e1", borderRadius: 18, padding: 24, marginTop: 28 }}>
+        <p aria-live="polite" style={{ marginBottom: 16 }}>{status}</p>
+        {progress !== null && busy && <p style={{ marginBottom: 12 }}>Model download progress: {progress}%</p>}
+        <p style={{ marginBottom: 18, fontVariantNumeric: "tabular-nums" }}>{recording ? `Recording: ${seconds}s` : "Up to 30 seconds per test"}</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          {recording ? (
+            <button type="button" style={{ ...buttonStyle, background: "#b91c1c" }} onClick={stopRecording}>Stop recording</button>
+          ) : (
+            <button type="button" style={{ ...buttonStyle, background: "#1d4ed8", opacity: busy ? 0.6 : 1 }} disabled={busy} onClick={startRecording}>Start recording</button>
+          )}
+          <button type="button" style={{ ...buttonStyle, background: "#0f766e", opacity: !audioUrl || busy || recording ? 0.55 : 1 }}
+            disabled={!audioUrl || busy || recording} onClick={transcribe}>
+            {busy ? "Processing…" : "Transcribe with Whisper"}
           </button>
-        ) : (
-          <button type="button" onClick={startRecording} style={{ background: "#1d4ed8", color: "white", padding: "14px 22px", border: 0, borderRadius: 10, cursor: "pointer" }}>
-            Start recording
-          </button>
-        )}
-        {audioUrl && (
-          <div style={{ marginTop: 24 }}>
-            <p style={{ marginBottom: 8, fontWeight: 600 }}>Playback</p>
-            <audio controls src={audioUrl} style={{ width: "100%" }} aria-label="Recorded audio playback" />
-          </div>
-        )}
+        </div>
+        {audioUrl && <div style={{ marginTop: 24 }}>
+          <p style={{ marginBottom: 8, fontWeight: 600 }}>Your recording</p>
+          <audio controls src={audioUrl} style={{ width: "100%" }} aria-label="Recorded audio" />
+        </div>}
+        {error && <p role="alert" style={{ color: "#b91c1c", marginTop: 18, overflowWrap: "anywhere" }}>{error}</p>}
       </section>
-      <p style={{ marginTop: 22, color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
-        Audio stays in this browser tab and is not uploaded. The page requires HTTPS and microphone permission.
-        This is a recording test, not speech transcription yet.
+      <section style={{ marginTop: 22, border: "1px solid #cbd5e1", borderRadius: 18, padding: 24 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Recognized text</h2>
+        <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", color: transcript ? "inherit" : "#64748b" }}>
+          {transcript || "Your transcription will appear here."}
+        </p>
+      </section>
+      <p style={{ marginTop: 20, color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
+        First use downloads model files (tens of megabytes). Processing speed depends on phone memory and CPU.
+        Audio is not sent to Anna Moga servers, although model assets are downloaded from the model host.
+        For longer recordings, use short clips for now.
       </p>
     </main>
   );
