@@ -52,9 +52,8 @@ function CharacterHead({ design }: { design: FaceDesign3D }) {
       </mesh>
       {[-1, 1].map((side) => (
         <group key={side}>
-          <mesh position={[side * (0.76 + faceFactor * 0.18), -0.13, -0.05]} rotation={[0, 0, side * -0.13]} material={skinMaterial}>
+          <mesh position={[side * (0.76 + faceFactor * 0.18), -0.13, -0.05]} rotation={[0, 0, side * -0.13]} scale={[0.16, 0.26, 0.115]} material={skinMaterial}>
             <sphereGeometry args={[1, 24, 24]} />
-            <mesh scale={[0.16, 0.26, 0.115]} />
           </mesh>
           <mesh position={[side * eyeSpacing, 0.14, 0.672]} scale={[0.185, 0.11, 0.105]}>
             <sphereGeometry args={[1, 32, 24]} />
