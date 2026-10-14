@@ -14,7 +14,10 @@
     "react-dom": "latest",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
-    "@huggingface/transformers": "^3.8.1"
+    "@huggingface/transformers": "^3.8.1",
+    "three": "^0.180.0",
+    "@react-three/fiber": "^9.4.0",
+    "@react-three/drei": "^10.7.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
@@ -24,6 +27,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "tailwindcss": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "@types/three": "^0.180.0"
   }
 }

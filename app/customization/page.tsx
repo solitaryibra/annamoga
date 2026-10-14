@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+const Head3DViewer = dynamic(() => import("../../components/Head3DViewer"), { ssr: false });
 
 type Preset = { id: string; name: string; group: string; face: number; jaw: number; chin: number; nose: number; eyes: number };
 const presets: Preset[] = [
@@ -16,41 +19,6 @@ type Design = { preset: string; face: number; jaw: number; chin: number; nose: n
 const initial: Design = { ...presets[0], preset: "M01", skin: skins[2] };
 function fromPreset(p: Preset, skin: string): Design {
   return { preset: p.id, face: p.face, jaw: p.jaw, chin: p.chin, nose: p.nose, eyes: p.eyes, skin };
-}
-function HeadPreview({ design }: { design: Design }) {
-  const width = 66 + (design.face - 50) * 0.36;
-  const jaw = 42 + (design.jaw - 50) * 0.42;
-  const chin = 11 + (design.chin - 50) * 0.13;
-  const nose = 9 + (design.nose - 50) * 0.12;
-  const spacing = 27 + (design.eyes - 50) * 0.17;
-  const path = `M ${160-width} 83 C ${160-width-10} 43 ${160+width+10} 43 ${160+width} 83 C ${160+width+8} 132 ${160+jaw+2} 196 ${160+chin} 224 Q 160 247 ${160-chin} 224 C ${160-jaw-2} 196 ${160-width-8} 132 ${160-width} 83 Z`;
-  return (
-    <svg viewBox="0 0 320 300" role="img" aria-label="Illustrative front-view face preview with adjustable facial proportions" style={{ width: "100%", height: "auto", maxHeight: 420 }}>
-      <defs>
-        <linearGradient id="faceLight" x1="15%" y1="18%" x2="95%" y2="85%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity=".24"/>
-          <stop offset="45%" stopColor="#ffffff" stopOpacity="0"/>
-          <stop offset="100%" stopColor="#402414" stopOpacity=".14"/>
-        </linearGradient>
-      </defs>
-      <ellipse cx="160" cy="280" rx="80" ry="9" fill="#000" opacity=".06"/>
-      <path d="M115 224 Q160 208 205 224 L222 278 L98 278 Z" fill={design.skin}/>
-      <ellipse cx={160-width-2} cy="152" rx="12" ry="26" fill={design.skin} stroke="#77503e" strokeOpacity=".32" strokeWidth="1.5"/>
-      <ellipse cx={160+width+2} cy="152" rx="12" ry="26" fill={design.skin} stroke="#77503e" strokeOpacity=".32" strokeWidth="1.5"/>
-      <path d={path} fill={design.skin} stroke="#77503e" strokeOpacity=".35" strokeWidth="1.5"/>
-      <path d={path} fill="url(#faceLight)"/>
-      <path d={`M${160-spacing-19} 134 Q${160-spacing} 123 ${160-spacing+19} 134`} stroke="#493328" fill="none" strokeWidth="4" strokeLinecap="round" opacity=".65"/>
-      <path d={`M${160+spacing-19} 134 Q${160+spacing} 123 ${160+spacing+19} 134`} stroke="#493328" fill="none" strokeWidth="4" strokeLinecap="round" opacity=".65"/>
-      <ellipse cx={160-spacing} cy="151" rx="16" ry="8" fill="#faf5ef"/>
-      <ellipse cx={160+spacing} cy="151" rx="16" ry="8" fill="#faf5ef"/>
-      <circle cx={160-spacing} cy="151" r="6" fill="#544d45"/>
-      <circle cx={160+spacing} cy="151" r="6" fill="#544d45"/>
-      <circle cx={158-spacing} cy="149" r="2" fill="#fff"/>
-      <circle cx={158+spacing} cy="149" r="2" fill="#fff"/>
-      <path d={`M160 153 Q${160-nose/2} 174 ${160-nose} 187 Q160 194 ${160+nose} 187`} stroke="#75503e" strokeOpacity=".6" fill="none" strokeWidth="2.3" strokeLinecap="round"/>
-      <path d="M143 210 Q160 217 177 210 Q160 225 143 210" stroke="#90584d" strokeWidth="2" fill="#a66d60" fillOpacity=".45"/>
-    </svg>
-  );
 }
 export default function CustomizationPage() {
   const [design, setDesign] = useState<Design>(initial);
@@ -98,10 +66,10 @@ export default function CustomizationPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: 26, alignItems: "start" }}>
         <section style={{ border: "1px solid #cbd5e1", borderRadius: 20, overflow: "hidden", background: "#f3f5f8" }}>
           <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-            <strong>Face preview</strong><span style={{ fontSize: 12, color: "#475569" }}>70% realism · concept</span>
+            <strong>Face preview</strong><span style={{ fontSize: 12, color: "#475569" }}>Procedural 3D · prototype</span>
           </div>
-          <div style={{ padding: 14 }}><HeadPreview design={design}/></div>
-          <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Interactive 2D proportion study. This is not yet a rotatable 3D mesh or printable model.</div>
+          <div style={{ padding: 14 }}><Head3DViewer design={design}/></div>
+          <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Drag to rotate, pinch or scroll to zoom. This is a procedural 3D prototype, not yet a production-ready semi-realistic sculpt.</div>
         </section>
         <section style={{ border: "1px solid #cbd5e1", borderRadius: 20, padding: 22 }}>
           <h2 style={{ fontSize: 21, fontWeight: 700, marginBottom: 15 }}>Choose a head preset</h2>
@@ -141,7 +109,7 @@ export default function CustomizationPage() {
           <p role="status" style={{ minHeight: 24, marginTop: 12, fontSize: 12, color: "#475569" }}>{saved ? "Draft saved in this browser. It is not yet linked to your account." : "Changes appear immediately in the preview."}</p>
         </section>
       </div>
-      <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, marginTop: 22 }}>This first version establishes the mobile-friendly customizer and saves settings locally. The next stage will replace the illustrative face with a real GLB 3D head that uses morph targets. No AI service or paid modeling API is involved.</p>
+      <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, marginTop: 22 }}>This browser-generated 3D head demonstrates customization without Blender or AI APIs. The head is a prototype built from procedural geometry and separate facial parts. Later we will replace it with a continuous semi-realistic sculpt suitable for refined morph targets and manufacturing.</p>
     </main>
   );
 }
