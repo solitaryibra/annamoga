@@ -17,7 +17,8 @@
     "@huggingface/transformers": "^3.8.1",
     "three": "^0.180.0",
     "@react-three/fiber": "^9.4.0",
-    "@react-three/drei": "^10.7.6"
+    "@react-three/drei": "^10.7.6",
+    "parakeet.js": "^1.4.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
