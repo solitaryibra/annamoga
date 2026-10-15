@@ -9,7 +9,7 @@ import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
 
 // The extracted OBJ ends in irregular open triangles below the jaw.
 // Clip that boundary to a consistent plane before smoothing its normals.
-function trimLowerBoundary(source: THREE.BufferGeometry, minimumY = 6.35) {
+function trimLowerBoundary(source: THREE.BufferGeometry, minimumY = 6.78) {
   const raw = source.index ? source.toNonIndexed() : source;
   const position = raw.getAttribute("position");
   const vertices: number[] = [];
@@ -30,6 +30,14 @@ function trimLowerBoundary(source: THREE.BufferGeometry, minimumY = 6.35) {
   };
   for (let i = 0; i + 2 < position.count; i += 3) {
     const triangle = [0, 1, 2].map(j => new THREE.Vector3().fromBufferAttribute(position, i + j));
+    // Cropping the full body left stretched, ribbon-like faces in this OBJ.
+    // Exclude those triangles instead of allowing them to hang off the head.
+    const longestEdge = Math.max(
+      triangle[0].distanceTo(triangle[1]),
+      triangle[1].distanceTo(triangle[2]),
+      triangle[2].distanceTo(triangle[0])
+    );
+    if (longestEdge > 0.34) continue;
     const polygon = clip(triangle);
     for (let j = 1; j + 1 < polygon.length; j++) {
       for (const v of [polygon[0], polygon[j], polygon[j + 1]]) vertices.push(v.x, v.y, v.z);
