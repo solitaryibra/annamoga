@@ -53,7 +53,7 @@ export default function CustomizationPage() {
         <span>{label}</span><strong>{design[key]}%</strong>
       </span>
       <input aria-label={label} style={{ width: "100%", accentColor: "#2563eb" }}
-        type="range" min="0" max="100" step="1" value={design[key]}
+        type="range" min="0" max="100" step="1" value={design[key]} disabled={viewer === "vitruvian" && key !== "face"}
         onChange={(e) => change(key, Number(e.target.value))} />
     </label>
   );
@@ -79,7 +79,7 @@ export default function CustomizationPage() {
             <button type="button" onClick={() => setViewer("prototype")} aria-pressed={viewer === "prototype"} style={{ borderRadius: 9, padding: "8px 12px", cursor: "pointer", border: viewer === "prototype" ? "2px solid #2563eb" : "1px solid #94a3b8", color: "#1e293b", background: viewer === "prototype" ? "#dbeafe" : "white" }}>Previous prototype</button>
           </div>
           <div style={{ padding: 14 }}>{viewer === "vitruvian" ? <VitruvianPreview design={design}/> : viewer === "rebuilt" ? <M01RebuiltViewer design={design}/> : viewer === "anatomical" ? <AnatomicalPreview design={design}/> : <Head3DViewer design={design}/>}</div>
-          <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Drag to rotate, pinch or scroll to zoom. Vitruvian trial loads an external CC0 GLB. Rotation and zoom work; facial shape sliders do not yet change the Vitruvian mesh. Select New M01 for working prototype sliders.</div>
+          <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Drag to rotate, pinch or scroll to zoom. Vitruvian eye and matte-skin repair. Face width changes the full head proportionally. Other face sliders are temporarily disabled until proper morph targets are available.</div>
         </section>
         <section style={{ border: "1px solid #cbd5e1", borderRadius: 20, padding: 22 }}>
           <h2 style={{ fontSize: 21, fontWeight: 700, marginBottom: 15 }}>Choose a head preset</h2>
@@ -97,6 +97,7 @@ export default function CustomizationPage() {
             <button type="button" onClick={() => setTab("shape")} aria-pressed={tab === "shape"} style={{ background: "none", border: 0, fontWeight: tab === "shape" ? 700 : 400, color: tab === "shape" ? "#2563eb" : "inherit", cursor: "pointer" }}>Facial proportions</button>
             <button type="button" onClick={() => setTab("skin")} aria-pressed={tab === "skin"} style={{ background: "none", border: 0, fontWeight: tab === "skin" ? 700 : 400, color: tab === "skin" ? "#2563eb" : "inherit", cursor: "pointer" }}>Skin tones</button>
           </div>
+          {viewer === "vitruvian" && <p style={{ fontSize: 12, color: "#475569", lineHeight: 1.6, marginTop: 12 }}>Vitruvian eye and skin repair preview: face width scales the complete head. Other shape sliders are temporarily disabled to prevent tearing the eyelids and eyes apart. Proper facial morph targets are the next step.</p>}
           <div style={{ paddingTop: 20 }}>
             {tab === "shape" ? <>
               {slider("face", "Face width")}
