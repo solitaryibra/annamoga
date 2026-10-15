@@ -40,70 +40,38 @@ function VitruvianModel({ design }: { design: FaceDesign3D }) {
   }, [gltf.scene]);
 
   useEffect(() => {
-    const meshes: THREE.Mesh[] = [];
+    // Keep the original facial vertices and FACS morphs intact. The previous
+    // experimental vertex displacement detached eyelids from the eyeballs.
     model.traverse((object) => {
-      if (object instanceof THREE.Mesh && object.geometry?.getAttribute("position")) meshes.push(object);
-    });
-    // The Vitruvian GLB contains eyes, a mouth interior and the real skin mesh.
-    // Never assume the largest mesh is the face; select the VitSkin material.
-    const isSkin = (mesh: THREE.Mesh) => {
-      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      return materials.some(m => /vitskin|skin|face/i.test(m.name)) ||
-        /cm_vitruvian|head/i.test(mesh.name);
-    };
-    const skinMeshes = meshes.filter(isSkin);
-    // A visual failure is preferable to silently deforming teeth or eyes.
-    const targetMeshes = skinMeshes.length ? skinMeshes : meshes.filter(m =>
-      (m.geometry.getAttribute("position").count > 5000) &&
-      !/eye|teeth|mouth|tongue|lash/i.test(m.name)
-    );
-    const face = (design.face - 50) / 50;
-    const jaw = (design.jaw - 50) / 50;
-    const chin = (design.chin - 50) / 50;
-    const nose = (design.nose - 50) / 50;
-    const eyes = (design.eyes - 50) / 50;
-    for (const mesh of targetMeshes) {
-      const geo = mesh.geometry;
-      const box = mesh.userData.originalBounds as THREE.Box3;
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      const pos = geo.getAttribute("position") as THREE.BufferAttribute;
-      const original = mesh.userData.originalPositions as Float32Array;
-      const hx = Math.max(size.x / 2, 0.001), hy = Math.max(size.y / 2, 0.001);
-      const hz = Math.max(size.z / 2, 0.001);
-      for (let i = 0; i < pos.count; i++) {
-        const x = original[3*i], y = original[3*i+1], z = original[3*i+2];
-        const nx = (x-center.x)/hx, ny = (y-center.y)/hy, nz = (z-center.z)/hz;
-        const low = 1 - THREE.MathUtils.smoothstep(ny, -0.6, 0.3);
-        const tip = 1 - THREE.MathUtils.smoothstep(ny, -0.95, -0.55);
-        const noseArea = Math.exp(-Math.pow(nx/0.26, 2)-Math.pow(ny/0.32,2));
-        const eyesArea = Math.exp(-Math.pow((ny-0.20)/0.2,2)) *
-          Math.exp(-Math.pow((Math.abs(nx)-0.35)/0.24,2));
-        // Larger bounded deformations make the test visibly responsive.
-        const newX = x + (x-center.x)*(0.24*face + 0.23*jaw*low - 0.15*chin*tip)
-          + Math.sign(nx)*eyes*eyesArea*hx*0.15
-          + nx*nose*noseArea*hx*0.12;
-        const newZ = z + nose*noseArea*Math.max(0,nz)*hz*0.22;
-        pos.setXYZ(i,newX,y,newZ);
+      if (!(object instanceof THREE.Mesh)) return;
+      const original = object.userData.originalPositions as Float32Array | undefined;
+      const positions = object.geometry.getAttribute("position") as THREE.BufferAttribute;
+      if (original && positions.array.length === original.length) {
+        (positions.array as Float32Array).set(original);
+        positions.needsUpdate = true;
+        object.geometry.computeVertexNormals();
+        object.geometry.computeBoundingSphere();
       }
-      pos.needsUpdate = true;
-      geo.computeVertexNormals();
-      geo.computeBoundingSphere();
-    }
-    // Apply selected color ONLY to skin materials, preserving eyes/mouth.
-    for (const mesh of meshes) {
-      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      for (const material of mats) {
+      const materials = Array.isArray(object.material) ? object.material : [object.material];
+      for (const material of materials) {
         if (!(material instanceof THREE.MeshStandardMaterial)) continue;
         if (/vitskin|skin|face/i.test(material.name)) {
           material.color.set(design.skin);
-          material.map = null; // external GLB doesn't bundle the full skin textures
+          material.map = null;
+          material.roughness = 0.96;
+          material.metalness = 0;
+          material.envMapIntensity = 0;
           material.needsUpdate = true;
         }
       }
-    }
-  }, [model, design.face, design.jaw, design.chin, design.nose, design.eyes, design.skin]);
-  return <primitive object={model} />;
+    });
+  }, [model, design.skin]);
+
+  // Temporary whole-head proportional test: includes eyes and other parts so
+  // the face does not split at the eye sockets. Not a localized facial morph.
+  const faceScale = 1 + (design.face - 50) / 50 * 0.08;
+  return <group scale={[faceScale, 1, 1]}><primitive object={model} /></group>;
+
 }
 
 class LoadBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
