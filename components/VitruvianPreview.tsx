@@ -29,6 +29,8 @@ function VitruvianModel({ design }: { design: FaceDesign3D }) {
         object.frustumCulled = false;
         object.geometry = object.geometry.clone();
         object.userData.originalPositions = new Float32Array(object.geometry.getAttribute("position").array);
+        object.geometry.computeBoundingBox();
+        object.userData.originalBounds = object.geometry.boundingBox!.clone();
       }
     });
     const wrapper = new THREE.Group();
@@ -44,8 +46,7 @@ function VitruvianModel({ design }: { design: FaceDesign3D }) {
     const main = meshes.sort((a, b) => b.geometry.getAttribute("position").count - a.geometry.getAttribute("position").count)[0];
     if (!main) return;
     const geo = main.geometry;
-    geo.computeBoundingBox();
-    const box = geo.boundingBox!;
+    const box = main.userData.originalBounds as THREE.Box3;
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const positions = geo.getAttribute("position") as THREE.BufferAttribute;
