@@ -7,7 +7,6 @@ import { createClient } from "../lib/supabase/client";
 type Mode = "login" | "signup" | "forgot";
 
 export default function AuthForm({ mode }: { mode: Mode }) {
-  const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -25,6 +24,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
     const lastName = String(form.get("lastName") || "").trim();
 
     try {
+      // Initialize only when a user submits the form, not during Next.js prerendering.
+      const supabase = createClient();
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
