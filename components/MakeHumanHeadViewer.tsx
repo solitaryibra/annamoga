@@ -5,6 +5,41 @@ import { OrbitControls } from "@react-three/drei";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { useMemo } from "react";
 import * as THREE from "three";
+import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
+
+// The extracted OBJ ends in irregular open triangles below the jaw.
+// Clip that boundary to a consistent plane before smoothing its normals.
+function trimLowerBoundary(source: THREE.BufferGeometry, minimumY = 6.35) {
+  const raw = source.index ? source.toNonIndexed() : source;
+  const position = raw.getAttribute("position");
+  const vertices: number[] = [];
+  const clip = (triangle: THREE.Vector3[]) => {
+    const result: THREE.Vector3[] = [];
+    for (let k = 0; k < triangle.length; k++) {
+      const start = triangle[k];
+      const end = triangle[(k + 1) % triangle.length];
+      const a = start.y >= minimumY;
+      const b = end.y >= minimumY;
+      if (a) result.push(start);
+      if (a !== b) {
+        const t = (minimumY - start.y) / (end.y - start.y);
+        result.push(start.clone().lerp(end, t));
+      }
+    }
+    return result;
+  };
+  for (let i = 0; i + 2 < position.count; i += 3) {
+    const triangle = [0, 1, 2].map(j => new THREE.Vector3().fromBufferAttribute(position, i + j));
+    const polygon = clip(triangle);
+    for (let j = 1; j + 1 < polygon.length; j++) {
+      for (const v of [polygon[0], polygon[j], polygon[j + 1]]) vertices.push(v.x, v.y, v.z);
+    }
+  }
+  const trimmed = new THREE.BufferGeometry();
+  trimmed.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  return trimmed;
+}
+
 import type { FaceDesign3D } from "./Head3DViewer";
 
 function RealHead({ design }: { design: FaceDesign3D }) {
@@ -21,7 +56,7 @@ function RealHead({ design }: { design: FaceDesign3D }) {
       if (o instanceof THREE.Mesh && !source) source = o.geometry;
     });
     if (!source) return null;
-    const g = (source as THREE.BufferGeometry).clone();
+    const g = trimLowerBoundary(source as THREE.BufferGeometry);
     const pos = g.getAttribute("position") as THREE.BufferAttribute;
     for (let i = 0; i < pos.count; i++) {
       let x = pos.getX(i);
@@ -36,8 +71,12 @@ function RealHead({ design }: { design: FaceDesign3D }) {
       z += nose * noseZone * 0.07 * Math.max(0, z);
       pos.setXYZ(i, x, y - 7.19 - chin * lower * 0.04, z - 0.4);
     }
-    g.computeVertexNormals();
-    return g;
+    // OBJLoader expands faces into separate triangles. Weld shared positions
+    // so computeVertexNormals gives smooth shading rather than flat facets.
+    const smooth = mergeVertices(g, 1e-4);
+    smooth.computeVertexNormals();
+    g.dispose();
+    return smooth;
   }, [obj, face, jaw, chin, nose, eyes]);
 
   if (!geometry) return null;
