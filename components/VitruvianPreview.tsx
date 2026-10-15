@@ -21,8 +21,9 @@ function VitruvianModel() {
     const largest = Math.max(size.x, size.y, size.z);
     if (!Number.isFinite(largest) || largest < 0.0001) throw new Error("Invalid GLB bounds");
     // Recenter the head; normalize dimensions rather than assuming export units.
-    scene.position.sub(center);
-    scene.scale.setScalar(2.4 / largest);
+    const factor = 2.4 / largest;
+    scene.position.copy(center).multiplyScalar(-factor);
+    scene.scale.setScalar(factor);
     scene.traverse((object) => {
       if (object instanceof THREE.Mesh) {
         object.frustumCulled = false;
