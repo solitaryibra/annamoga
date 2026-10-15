@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 const Head3DViewer = dynamic(() => import("../../components/Head3DViewer"), { ssr: false });
-const MakeHumanHeadViewer = dynamic(() => import("../../components/MakeHumanHeadViewer"), { ssr: false });
+const AnatomicalPreview = dynamic(() => import("../../components/AnatomicalPreview"), { ssr: false });
 
 type Preset = { id: string; name: string; group: string; face: number; jaw: number; chin: number; nose: number; eyes: number };
 const presets: Preset[] = [
@@ -74,7 +74,7 @@ export default function CustomizationPage() {
             <button type="button" onClick={() => setViewer("anatomical")} aria-pressed={viewer === "anatomical"} style={{ borderRadius: 9, padding: "8px 12px", cursor: "pointer", border: viewer === "anatomical" ? "2px solid #2563eb" : "1px solid #94a3b8", color: "#1e293b", background: viewer === "anatomical" ? "#dbeafe" : "white" }}>Anatomical mesh</button>
             <button type="button" onClick={() => setViewer("prototype")} aria-pressed={viewer === "prototype"} style={{ borderRadius: 9, padding: "8px 12px", cursor: "pointer", border: viewer === "prototype" ? "2px solid #2563eb" : "1px solid #94a3b8", color: "#1e293b", background: viewer === "prototype" ? "#dbeafe" : "white" }}>Previous prototype</button>
           </div>
-          <div style={{ padding: 14 }}>{viewer === "anatomical" ? <MakeHumanHeadViewer design={design}/> : <Head3DViewer design={design}/>}</div>
+          <div style={{ padding: 14 }}>{viewer === "anatomical" ? <AnatomicalPreview design={design}/> : <Head3DViewer design={design}/>}</div>
           <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Drag to rotate, pinch or scroll to zoom. Anatomical mesh uses the CC0 MakeHuman base head, cropped for testing. Details and 3D-printing topology need refinement.</div>
         </section>
         <section style={{ border: "1px solid #cbd5e1", borderRadius: 20, padding: 22 }}>
