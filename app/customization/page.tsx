@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
+const M01RebuiltViewer = dynamic(() => import("../../components/M01RebuiltViewer"), { ssr: false });
 const Head3DViewer = dynamic(() => import("../../components/Head3DViewer"), { ssr: false });
 const AnatomicalPreview = dynamic(() => import("../../components/AnatomicalPreview"), { ssr: false });
 
@@ -24,7 +25,7 @@ function fromPreset(p: Preset, skin: string): Design {
 export default function CustomizationPage() {
   const [design, setDesign] = useState<Design>(initial);
   const [saved, setSaved] = useState(false);
-  const [viewer, setViewer] = useState<"anatomical" | "prototype">("anatomical");
+  const [viewer, setViewer] = useState<"rebuilt" | "anatomical" | "prototype">("rebuilt");
   const [tab, setTab] = useState<"shape" | "skin">("shape");
   useEffect(() => {
     try {
@@ -68,14 +69,15 @@ export default function CustomizationPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: 26, alignItems: "start" }}>
         <section style={{ border: "1px solid #cbd5e1", borderRadius: 20, overflow: "hidden", background: "#f3f5f8" }}>
           <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-            <strong>3D face preview</strong><span style={{ fontSize: 12, color: "#475569" }}>MakeHuman CC0 · M01 test</span>
+            <strong>3D face preview</strong><span style={{ fontSize: 12, color: "#475569" }}>M01 · rebuilt prototype</span>
           </div>
           <div style={{ display: "flex", gap: 8, padding: "0 16px 8px", flexWrap: "wrap" }}>
+            <button type="button" onClick={() => setViewer("rebuilt")} aria-pressed={viewer === "rebuilt"} style={{ borderRadius: 9, padding: "8px 12px", cursor: "pointer", border: viewer === "rebuilt" ? "2px solid #2563eb" : "1px solid #94a3b8", color: "#1e293b", background: viewer === "rebuilt" ? "#dbeafe" : "white" }}>New M01</button>
             <button type="button" onClick={() => setViewer("anatomical")} aria-pressed={viewer === "anatomical"} style={{ borderRadius: 9, padding: "8px 12px", cursor: "pointer", border: viewer === "anatomical" ? "2px solid #2563eb" : "1px solid #94a3b8", color: "#1e293b", background: viewer === "anatomical" ? "#dbeafe" : "white" }}>Anatomical mesh</button>
             <button type="button" onClick={() => setViewer("prototype")} aria-pressed={viewer === "prototype"} style={{ borderRadius: 9, padding: "8px 12px", cursor: "pointer", border: viewer === "prototype" ? "2px solid #2563eb" : "1px solid #94a3b8", color: "#1e293b", background: viewer === "prototype" ? "#dbeafe" : "white" }}>Previous prototype</button>
           </div>
-          <div style={{ padding: 14 }}>{viewer === "anatomical" ? <AnatomicalPreview design={design}/> : <Head3DViewer design={design}/>}</div>
-          <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Drag to rotate, pinch or scroll to zoom. Anatomical mesh uses the CC0 MakeHuman base head, cropped for testing. Details and 3D-printing topology need refinement.</div>
+          <div style={{ padding: 14 }}>{viewer === "rebuilt" ? <M01RebuiltViewer design={design}/> : viewer === "anatomical" ? <AnatomicalPreview design={design}/> : <Head3DViewer design={design}/>}</div>
+          <div style={{ padding: "14px 20px", fontSize: 12, color: "#475569", lineHeight: 1.6 }}>Drag to rotate, pinch or scroll to zoom. New M01 is created entirely from clean browser-generated geometry, with no cropped OBJ. This remains a visual prototype and is not print-ready.</div>
         </section>
         <section style={{ border: "1px solid #cbd5e1", borderRadius: 20, padding: 22 }}>
           <h2 style={{ fontSize: 21, fontWeight: 700, marginBottom: 15 }}>Choose a head preset</h2>
@@ -115,7 +117,7 @@ export default function CustomizationPage() {
           <p role="status" style={{ minHeight: 24, marginTop: 12, fontSize: 12, color: "#475569" }}>{saved ? "Draft saved in this browser. It is not yet linked to your account." : "Changes appear immediately in the preview."}</p>
         </section>
       </div>
-      <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, marginTop: 22 }}>This first anatomical M01 head uses a genuine MakeHuman mesh, not an AI-generated picture. Existing presets and sliders modify a preliminary shared mesh, but six anatomically refined presets, eyes, neck finishing, validated shape keys, and printing preparation remain future work.</p>
+      <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, marginTop: 22 }}>New M01 is a clean original browser-generated mesh rather than the damaged MakeHuman OBJ. It supports our current sliders; its eyes and ears are separate meshes. Realistic sculpting, distinct preset topology, and printable manufacturing geometry remain future work.</p>
     </main>
   );
 }
